@@ -55,3 +55,15 @@ Sofyan Said Atsaurry
 	    Level#1 | Level#2 | Level#3 | Level#4
 		MAT-3   | MAT-2   | MAT-4   | MAT-8
 		MAT-7   | MAT-9   | MAT-5   | MAT-1
+
+
+Answere 1 - test_01
+
+![image](https://user-images.githubusercontent.com/126329984/221356565-2fc42f2b-1d83-4317-a2a0-8be89fdf2f23.png)
+![image](https://user-images.githubusercontent.com/126329984/221356576-634a8d3c-a742-4471-b826-b3d39209c067.png)
+
+
+
+Answere 2 - test_02
+
+![image](https://user-images.githubusercontent.com/126329984/221356502-16426a96-fa15-427d-acff-787b9352179f.png)
