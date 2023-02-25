@@ -1,0 +1,41 @@
+*&---------------------------------------------------------------------*
+*& Report  ZTEST01
+*& By Sofyan
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT ztest01.
+TYPES: BEGIN OF ty_data,
+          idx TYPE i,
+          text(20) TYPE c,
+        END OF ty_data.
+
+DATA: lv_str TYPE string,
+      it_data TYPE TABLE OF string,
+      wa_data TYPE string,
+      lv_i TYPE i,
+      it_data2 TYPE TABLE OF ty_data,
+      wa_data2 TYPE ty_data.
+
+PARAMETERS p_text TYPE string.
+
+SPLIT p_text AT ' ' INTO TABLE it_data.
+
+lv_i = 0.
+LOOP AT it_data INTO wa_data.
+  wa_data2-idx = lv_i.
+  wa_data2-text = wa_data.
+  APPEND wa_data2 TO it_data2.
+  lv_i = lv_i + 1.
+ENDLOOP.
+
+SORT it_data2 BY idx DESCENDING.
+
+LOOP AT it_data2 INTO wa_data2.
+  CONCATENATE lv_str wa_data2-text  INTO lv_str SEPARATED BY space.
+  WRITE: / lv_str.
+ENDLOOP.
+
+MESSAGE lv_str TYPE 'I'.

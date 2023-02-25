@@ -1,0 +1,104 @@
+*&---------------------------------------------------------------------*
+*& Report  ZTEST02
+*& By Sofyan
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT ztest02.
+TYPES: BEGIN OF z_bom,
+          matnr TYPE c LENGTH 5,
+          idnrk TYPE c LENGTH 5,
+        END OF z_bom,
+       BEGIN OF ty_data,
+          level TYPE i,
+          value TYPE c LENGTH 5,
+        END OF ty_data.
+
+DATA: lv_i TYPE i,
+      it_bom TYPE TABLE OF z_bom,
+      wa_bom TYPE z_bom,
+      wa_lastbom TYPE z_bom,
+      it_data TYPE TABLE OF ty_data,
+      wa_data TYPE ty_data,
+      fieldcatalog TYPE slis_t_fieldcat_alv WITH HEADER LINE,
+      lv_str TYPE string,
+      lv_char TYPE c.
+
+wa_bom-matnr = 'MAT-3'.
+wa_bom-idnrk = 'MAT-2'.
+APPEND wa_bom TO it_bom.
+wa_bom-matnr = 'MAT-2'.
+wa_bom-idnrk = 'MAT-4'.
+APPEND wa_bom TO it_bom.
+wa_bom-matnr = 'MAT-4'.
+wa_bom-idnrk = 'MAT-8'.
+APPEND wa_bom TO it_bom.
+*wa_bom-matnr = 'MAT-8'.
+*wa_bom-idnrk = 'MAT-0'.
+*APPEND wa_bom TO it_bom.
+wa_bom-matnr = 'MAT-7'.
+wa_bom-idnrk = 'MAT-9'.
+APPEND wa_bom TO it_bom.
+wa_bom-matnr = 'MAT-9'.
+wa_bom-idnrk = 'MAT-5'.
+APPEND wa_bom TO it_bom.
+wa_bom-matnr = 'MAT-5'.
+wa_bom-idnrk = 'MAT-1'.
+APPEND wa_bom TO it_bom.
+
+CLEAR wa_bom.
+LOOP AT it_bom INTO wa_bom.
+
+  IF wa_lastbom IS INITIAL. " ketika pertama
+    lv_i = 1.
+    wa_data-level = lv_i.
+    wa_data-value = wa_bom-matnr.
+    APPEND wa_data TO it_data.
+  ELSEIF wa_lastbom-idnrk EQ wa_bom-matnr. " ketika sama
+    lv_i = lv_i + 1.
+    wa_data-level = lv_i.
+    wa_data-value = wa_bom-matnr.
+    APPEND wa_data TO it_data.
+  ELSE. " ketika beda
+    " simpan child untuk level terakhir
+    wa_data-level = lv_i + 1.
+    wa_data-value = wa_lastbom-idnrk.
+    APPEND wa_data TO it_data.
+    " simpan parent level 1
+    lv_i = 1.
+    wa_data-level = lv_i.
+    wa_data-value = wa_bom-matnr.
+    APPEND wa_data TO it_data.
+  ENDIF.
+
+  wa_lastbom = wa_bom.
+ENDLOOP.
+
+" simpan child untuk level terakhir
+wa_data-level = lv_i + 1.
+wa_data-value = wa_lastbom-idnrk.
+APPEND wa_data TO it_data.
+
+* Header
+lv_i = 0.
+LOOP AT it_data INTO wa_data.
+  IF wa_data-level > lv_i.
+   lv_i = wa_data-level.
+   lv_char = wa_data-level.
+   CONCATENATE lv_str 'Level#' lv_char '|' INTO lv_str.
+  ENDIF.
+ENDLOOP.
+WRITE: / lv_str.
+
+* Value
+CLEAR lv_str.
+LOOP AT it_data INTO wa_data.
+  CONCATENATE lv_str wa_data-value '  | ' INTO lv_str.
+  IF wa_data-level >= lv_i.
+   WRITE: / lv_str.
+   CLEAR lv_str.
+  ENDIF.
+ENDLOOP.
+WRITE: / lv_str.
